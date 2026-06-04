@@ -23,11 +23,14 @@ export default function Register({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await authAPI.register(email, password, name);
+      const response = await authAPI.register(email, password, name, confirmPassword);
       onLogin(response.data.user, response.data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      const errorMsg = err.response?.data?.detail || 
+                       Object.values(err.response?.data || {}).flat().join(', ') ||
+                       'Registration failed. Please try again.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

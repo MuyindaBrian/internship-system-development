@@ -22,8 +22,8 @@ api.interceptors.request.use((config) => {
 export const authAPI = {
   login: (email, password) =>
     api.post('/users/login/', { email, password }),
-  register: (email, password, name) =>
-    api.post('/users/register/', { email, password, name }),
+  register: (email, password, name, passwordConfirm) =>
+    api.post('/users/register/', { email, password, password_confirm: passwordConfirm || password, name }),
   logout: () =>
     api.post('/users/logout/'),
   getCurrentUser: () =>
@@ -33,29 +33,31 @@ export const authAPI = {
 // Internships endpoints
 export const internshipsAPI = {
   getAll: () =>
-    api.get('/internships/'),
+    api.get('internships/'),
   getById: (id) =>
-    api.get(`/internships/${id}/`),
+    api.get(`internships/${id}/`),
   create: (data) =>
-    api.post('/internships/', data),
+    api.post('internships/', data),
   update: (id, data) =>
-    api.put(`/internships/${id}/`, data),
+    api.put(`internships/${id}/`, data),
   delete: (id) =>
-    api.delete(`/internships/${id}/`),
+    api.delete(`internships/${id}/`),
+  apply: (id) =>
+    api.post(`internships/${id}/apply/`),
 };
 
 // Maintenance endpoints
 export const maintenanceAPI = {
   getAll: () =>
-    api.get('/maintenance/'),
+    api.get('maintenance/'),
   getById: (id) =>
-    api.get(`/maintenance/${id}/`),
+    api.get(`maintenance/${id}/`),
   create: (data) =>
-    api.post('/maintenance/', data),
+    api.post('maintenance/', data),
   update: (id, data) =>
-    api.put(`/maintenance/${id}/`, data),
+    api.put(`maintenance/${id}/`, data),
   delete: (id) =>
-    api.delete(`/maintenance/${id}/`),
+    api.delete(`maintenance/${id}/`),
 };
 
 export default api;
