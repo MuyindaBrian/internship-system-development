@@ -21,41 +21,41 @@ api.interceptors.request.use((config) => {
 // Auth endpoints
 export const authAPI = {
   login: (email, password) =>
-    api.post('/users/login/', { email, password }),
+    api.post('/auth/login/', { email, password }),
   register: (email, password, name, passwordConfirm) =>
-    api.post('/users/register/', { email, password, password_confirm: passwordConfirm || password, name }),
+    api.post('/auth/register/', { email, password, password_confirm: passwordConfirm || password, name }),
   logout: () =>
-    api.post('/users/logout/'),
+    api.post('/auth/logout/'),
   getCurrentUser: () =>
-    api.get('/users/me/'),
+    api.get('/auth/me/'),
 };
 
 // Internships endpoints
 export const internshipsAPI = {
   getAll: () =>
-    api.get('internships/'),
+    api.get('internships/').then((response) => response.data),
   getById: (id) =>
-    api.get(`internships/${id}/`),
+    api.get(`internships/${id}/`).then((response) => response.data),
   create: (data) =>
-    api.post('internships/', data),
+    api.post('internships/', data).then((response) => response.data),
   update: (id, data) =>
-    api.put(`internships/${id}/`, data),
+    api.put(`internships/${id}/`, data).then((response) => response.data),
   delete: (id) =>
     api.delete(`internships/${id}/`),
   apply: (id) =>
-    api.post(`internships/${id}/apply/`),
+    api.post(`internships/${id}/apply/`).then((response) => response.data),
 };
 
 // Maintenance endpoints
 export const maintenanceAPI = {
   getAll: () =>
-    api.get('maintenance/'),
+    api.get('maintenance/').then((response) => response.data),
   getById: (id) =>
-    api.get(`maintenance/${id}/`),
+    api.get(`maintenance/${id}/`).then((response) => response.data),
   create: (data) =>
-    api.post('maintenance/', data),
+    api.post('maintenance/', data).then((response) => response.data),
   update: (id, data) =>
-    api.put(`maintenance/${id}/`, data),
+    api.put(`maintenance/${id}/`, data).then((response) => response.data),
   delete: (id) =>
     api.delete(`maintenance/${id}/`),
 };

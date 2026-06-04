@@ -19,7 +19,7 @@ export default function MaintenanceRequests() {
   const fetchRequests = async () => {
     try {
       const response = await maintenanceAPI.getAll();
-      setRequests(response.data);
+      setRequests(response.results || []);
     } catch (err) {
       setError('Failed to load maintenance requests');
       console.error('Error:', err);

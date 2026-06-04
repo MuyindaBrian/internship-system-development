@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import InternshipList from './pages/InternshipList';
 import MaintenanceRequests from './pages/MaintenanceRequests';
+import { authAPI } from './services/api';
 import './App.css';
 
 function App() {
@@ -17,6 +18,14 @@ function App() {
     const token = localStorage.getItem('auth_token');
     if (token) {
       setIsAuthenticated(true);
+      authAPI.getCurrentUser()
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch(() => {
+          setIsAuthenticated(false);
+          localStorage.removeItem('auth_token');
+        });
     }
   }, []);
 

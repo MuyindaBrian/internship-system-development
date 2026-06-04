@@ -7,17 +7,18 @@ from .models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email', 'name', 'username', 'created_at']
+        fields = ['id', 'email', 'name', 'username', 'user_type', 'phone', 'bio', 'company_name', 'created_at']
         read_only_fields = ['id', 'created_at']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     password_confirm = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    user_type = serializers.ChoiceField(choices=CustomUser.USER_TYPE_CHOICES, default='student')
 
     class Meta:
         model = CustomUser
-        fields = ['email', 'name', 'password', 'password_confirm']
+        fields = ['email', 'name', 'password', 'password_confirm', 'user_type', 'phone', 'company_name']
 
     def validate(self, data):
         if data['password'] != data['password_confirm']:
@@ -30,6 +31,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             name=validated_data['name'],
             username=validated_data['email'],
+            user_type=validated_data.get('user_type', 'student'),
+            phone=validated_data.get('phone', ''),
+            company_name=validated_data.get('company_name', ''),
             password=validated_data['password']
         )
         return user

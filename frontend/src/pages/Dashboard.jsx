@@ -13,8 +13,8 @@ export default function Dashboard({ user }) {
           internshipsAPI.getAll(),
           maintenanceAPI.getAll(),
         ]);
-        setMyInternships(internshipsRes.data);
-        setMyMaintenance(maintenanceRes.data);
+        setMyInternships(internshipsRes.results || []);
+        setMyMaintenance(maintenanceRes.results || []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {

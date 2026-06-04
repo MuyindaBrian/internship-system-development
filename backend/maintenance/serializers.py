@@ -9,4 +9,7 @@ class MaintenanceRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = MaintenanceRequest
         fields = ['id', 'room', 'issue', 'status', 'requested_by', 'created_at', 'updated_at', 'resolved_at']
-        read_only_fields = ['id', 'requested_by', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'requested_by', 'created_at', 'updated_at', 'resolved_at']
+        extra_kwargs = {
+            'status': {'required': False}
+        }

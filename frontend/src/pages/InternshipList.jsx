@@ -10,7 +10,7 @@ export default function InternshipList() {
     const fetchInternships = async () => {
       try {
         const response = await internshipsAPI.getAll();
-        setInternships(response.data);
+        setInternships(response.results || []);
       } catch (err) {
         setError('Failed to load internships');
         console.error('Error:', err);
