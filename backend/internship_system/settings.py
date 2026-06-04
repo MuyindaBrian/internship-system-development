@@ -19,13 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
+from decouple import config, Csv
+from urllib.parse import urlparse
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)0n+0zu9t8oz&c+d74p@9_r=tjj7pwv*sa8ft&8ktn7-v4y$i3'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-)0n+0zu9t8oz&c+d74p@9_r=tjj7pwv*sa8ft&8ktn7-v4y$i3')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 
 # Application definition
@@ -58,11 +61,11 @@ MIDDLEWARE = [
 ]
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:3000',
-    'http://127.0.0.1:5173',
-]
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173',
+    cast=Csv()
+)
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -100,12 +103,29 @@ WSGI_APPLICATION = 'internship_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = config('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+parsed_db_url = urlparse(DATABASE_URL)
+
+if parsed_db_url.scheme.startswith('postgres'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': parsed_db_url.path[1:],
+            'USER': parsed_db_url.username,
+            'PASSWORD': parsed_db_url.password,
+            'HOST': parsed_db_url.hostname,
+            'PORT': parsed_db_url.port or '',
+        }
     }
-}
+elif parsed_db_url.scheme == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / parsed_db_url.path.lstrip('/'),
+        }
+    }
+else:
+    raise ValueError(f'Unsupported DATABASE_URL scheme: {parsed_db_url.scheme}')
 
 
 # Password validation
