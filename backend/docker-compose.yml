@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: gunicorn internship_system.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - '8000:8000'
+    environment:
+      DEBUG: 'True'
+      SECRET_KEY: 'django-secret-key'
+      DATABASE_URL: 'postgres://postgres:postgres@db:5432/postgres'
+      CORS_ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000'
+      CSRF_TRUSTED_ORIGINS: 'http://localhost:5173,http://localhost:3000'
+    depends_on:
+      - db
+
+volumes:
+  db_data:

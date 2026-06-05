@@ -229,6 +229,20 @@ docker build -t internship-backend .
 docker run -p 8000:8000 internship-backend
 ```
 
+### Docker Compose
+```bash
+docker compose up --build
+```
+
+The backend includes `docker-compose.yml` for a local Postgres + Django setup.
+
+### Deploying on Vercel
+The backend is ready for a Vercel Docker deployment from the `backend/` directory.
+Use `backend/vercel.json`, `backend/Dockerfile`, and `backend/.dockerignore`.
+If you deploy from Vercel, set the project root to `backend/` and configure environment variables there.
+
+For full instructions, see `DEPLOYMENT_DOCKER_VERCEL.md`.
+
 ### Security Checklist
 - [ ] Set DEBUG = False
 - [ ] Use environment variables for secrets

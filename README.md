@@ -26,8 +26,16 @@ A full-stack web application for managing university internships and maintenance
     ├── maintenance/         # Maintenance request app
     ├── manage.py
     ├── db.sqlite3           # SQLite database
-    └── requirements.txt
+    ├── requirements.txt      # Django dependencies
+    ├── Pipfile              # Optional pipenv dependencies
+    ├── Dockerfile           # Django Docker deployment
+    ├── docker-compose.yml   # Local Docker dev setup
+    ├── vercel.json          # Vercel Docker deployment config
+    └── DEPLOYMENT_DOCKER_VERCEL.md
 ```
+
+> Note: The backend is fully contained in `backend/`. The root-level files outside `frontend/` and `backend/` are not required for Django deployment. They are part of additional workspace/frontend tooling and can be ignored when you only want to run the Django backend.
+
 
 ## Features
 
@@ -92,6 +100,18 @@ python manage.py runserver
 ```
 
 The backend API will be available at `http://localhost:8000/`
+
+### Backend Docker Setup
+
+From `backend/` you can also run the Django backend with Docker:
+
+```bash
+docker compose up --build
+```
+
+This uses `backend/Dockerfile` and `backend/docker-compose.yml` for a clean Django + Postgres local environment.
+
+For Vercel deployment, the backend is ready using `backend/vercel.json`.
 
 ## API Endpoints
 
