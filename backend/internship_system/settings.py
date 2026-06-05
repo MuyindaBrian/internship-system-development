@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -117,6 +118,9 @@ if parsed_db_url.scheme.startswith('postgres'):
             'PORT': parsed_db_url.port or '',
         }
     }
+    # If using Supabase (hosted Postgres) enforce SSL mode
+    if parsed_db_url.hostname and 'supabase.co' in parsed_db_url.hostname:
+        DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 elif parsed_db_url.scheme == 'sqlite':
     DATABASES = {
         'default': {
@@ -163,3 +167,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Production defaults
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())

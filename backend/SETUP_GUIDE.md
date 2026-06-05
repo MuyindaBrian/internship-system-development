@@ -70,6 +70,12 @@ SECRET_KEY=your-secret-key-here
 ALLOWED_HOSTS=localhost,127.0.0.1
 DATABASE_URL=sqlite:///db.sqlite3
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+CSRF_TRUSTED_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+If you are using Supabase Postgres, set `DATABASE_URL` to the Supabase connection string:
+```
+DATABASE_URL=postgres://postgres:<password>@db.<project>.supabase.co:5432/postgres
 ```
 
 Note: Change these settings for production!

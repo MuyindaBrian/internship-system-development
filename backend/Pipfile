@@ -9,6 +9,8 @@ djangorestframework = "*"
 django-cors-headers = "*"
 python-decouple = "*"
 gunicorn = "*"
+psycopg2-binary = "*"
+whitenoise = "*"
 
 [dev-packages]
 

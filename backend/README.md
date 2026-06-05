@@ -171,7 +171,14 @@ CORS_ALLOWED_ORIGINS = [
 Default: SQLite (db.sqlite3)
 Production: PostgreSQL recommended
 
-Update `DATABASES` in settings.py for PostgreSQL:
+This backend already supports `DATABASE_URL` environment configuration, and it can connect to a Supabase hosted PostgreSQL database.
+
+For Supabase, use the project database connection string in your backend `.env` file:
+```env
+DATABASE_URL=postgres://postgres:<password>@db.<project>.supabase.co:5432/postgres
+```
+
+If you are not using Supabase database hosting, you can still use PostgreSQL with settings like:
 ```python
 DATABASES = {
     'default': {
@@ -184,6 +191,8 @@ DATABASES = {
     }
 }
 ```
+
+> Note: Supabase provides hosted Postgres and Auth, but it does not host Django apps directly. The Django API must still be deployed to a Python-compatible host, while using Supabase as the database layer. Recommended hosts include Render, Railway, Fly.io, or any Docker-compatible provider.
 
 ## Development
 

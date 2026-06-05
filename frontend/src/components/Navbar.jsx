@@ -18,10 +18,10 @@ export default function Navbar({ isAuthenticated, user, onLogout }) {
 
           <div className="flex items-center gap-6">
             <Link to="/" className="text-gray-700 hover:text-primary transition">
-              Home
+              Home Page
             </Link>
             <Link to="/internships" className="text-gray-700 hover:text-primary transition">
-              Room Listing
+              Room Listing Page
             </Link>
 
             {isAuthenticated ? (
@@ -48,7 +48,7 @@ export default function Navbar({ isAuthenticated, user, onLogout }) {
                   to="/login"
                   className="text-gray-700 hover:text-primary transition"
                 >
-                  Login
+                  Login/Register
                 </Link>
                 <Link
                   to="/register"
