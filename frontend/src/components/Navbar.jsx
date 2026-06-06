@@ -21,7 +21,7 @@ export default function Navbar({ isAuthenticated, user, onLogout }) {
               Home Page
             </Link>
             <Link to="/internships" className="text-gray-700 hover:text-primary transition">
-              Room Listing Page
+              Internships
             </Link>
 
             {isAuthenticated ? (

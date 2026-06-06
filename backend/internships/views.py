@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
+from internship_system.permissions import IsAdminOrCompany
 from .models import Internship, InternshipApplication
 from .serializers import InternshipSerializer, InternshipApplicationSerializer
 
@@ -19,6 +20,11 @@ class InternshipViewSet(viewsets.ModelViewSet):
     serializer_class = InternshipSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = InternshipPagination
+
+    def get_permissions(self):
+        if self.action in ('create', 'update', 'partial_update', 'destroy'):
+            return [IsAdminOrCompany()]
+        return super().get_permissions()
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'company', 'description']
     ordering_fields = ['created_at', 'status']

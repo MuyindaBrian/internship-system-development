@@ -16,10 +16,11 @@ export default function Login({ onLogin }) {
 
     try {
       const response = await authAPI.login(email, password);
-      onLogin(response.data.user, response.data.token);
+      onLogin(response.user, response.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please try again.');
+      const msg = err.response?.data?.non_field_errors?.[0] || err.response?.data?.detail || 'Login failed. Please try again.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

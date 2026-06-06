@@ -24,7 +24,7 @@ export default function Register({ onLogin }) {
 
     try {
       const response = await authAPI.register(email, password, name, confirmPassword);
-      onLogin(response.data.user, response.data.token);
+      onLogin(response.user, response.token);
       navigate('/dashboard');
     } catch (err) {
       const errorMsg = err.response?.data?.detail || 

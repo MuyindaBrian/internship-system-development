@@ -3,6 +3,8 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
     USER_TYPE_CHOICES = [
         ('student', 'Student'),
         ('admin', 'Administrator'),

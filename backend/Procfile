@@ -1,1 +1,1 @@
-web: gunicorn internship_system.wsgi --bind 0.0.0.0:$PORT
+web: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn internship_system.wsgi --bind 0.0.0.0:$PORT"

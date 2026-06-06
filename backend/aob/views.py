@@ -37,7 +37,10 @@ class AOBRequestViewSet(viewsets.ModelViewSet):
         aob_request = self.get_object()
         if request.user.user_type != 'admin':
             return Response({'detail': 'Only admins can approve requests.'}, status=status.HTTP_403_FORBIDDEN)
-        
+
+        if aob_request.status not in ('pending', 'in_review'):
+            return Response({'detail': 'Cannot approve request in its current state.'}, status=status.HTTP_400_BAD_REQUEST)
+
         aob_request.status = 'approved'
         aob_request.reviewed_by = request.user
         aob_request.save()
@@ -48,7 +51,10 @@ class AOBRequestViewSet(viewsets.ModelViewSet):
         aob_request = self.get_object()
         if request.user.user_type != 'admin':
             return Response({'detail': 'Only admins can reject requests.'}, status=status.HTTP_403_FORBIDDEN)
-        
+
+        if aob_request.status not in ('pending', 'in_review'):
+            return Response({'detail': 'Cannot reject request in its current state.'}, status=status.HTTP_400_BAD_REQUEST)
+
         response_text = request.data.get('response', '')
         aob_request.status = 'rejected'
         aob_request.reviewed_by = request.user
@@ -61,7 +67,10 @@ class AOBRequestViewSet(viewsets.ModelViewSet):
         aob_request = self.get_object()
         if request.user.user_type != 'admin':
             return Response({'detail': 'Only admins can resolve requests.'}, status=status.HTTP_403_FORBIDDEN)
-        
+
+        if aob_request.status != 'approved':
+            return Response({'detail': 'Only approved requests can be resolved.'}, status=status.HTTP_400_BAD_REQUEST)
+
         from django.utils import timezone
         aob_request.status = 'resolved'
         aob_request.resolved_at = timezone.now()

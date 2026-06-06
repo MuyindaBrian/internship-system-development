@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { internshipsAPI } from '../services/api';
 
 export default function InternshipList() {
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [applyError, setApplyError] = useState('');
+  const [appliedIds, setAppliedIds] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchInternships = async () => {
@@ -22,6 +26,23 @@ export default function InternshipList() {
     fetchInternships();
   }, []);
 
+  const handleApply = async (id) => {
+    if (!localStorage.getItem('auth_token')) {
+      navigate('/login');
+      return;
+    }
+
+    setApplyError('');
+
+    try {
+      await internshipsAPI.apply(id);
+      setAppliedIds((prev) => ({ ...prev, [id]: true }));
+    } catch (err) {
+      const msg = err.response?.data?.detail || err.response?.data?.non_field_errors?.[0] || 'Unable to apply for this internship.';
+      setApplyError(msg);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -34,6 +55,12 @@ export default function InternshipList() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-4xl font-bold text-gray-900 mb-2">Available Internships</h1>
       <p className="text-gray-600 mb-10">Browse and apply for internship positions</p>
+
+      {applyError && (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg mb-6">
+          {applyError}
+        </div>
+      )}
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -68,8 +95,13 @@ export default function InternshipList() {
                   </span>
                 </p>
               </div>
-              <button className="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-600 transition">
-                Apply Now
+              <button
+                type="button"
+                onClick={() => handleApply(internship.id)}
+                disabled={appliedIds[internship.id]}
+                className="w-full bg-primary text-white py-2 rounded-lg hover:bg-blue-600 transition disabled:opacity-60"
+              >
+                {appliedIds[internship.id] ? 'Applied' : 'Apply Now'}
               </button>
             </div>
           ))}

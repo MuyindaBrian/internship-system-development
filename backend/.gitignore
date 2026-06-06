@@ -1,0 +1,9 @@
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Local environment variables
+.env
+
+# Local database
+db.sqlite3

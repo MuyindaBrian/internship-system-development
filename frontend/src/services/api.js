@@ -21,13 +21,20 @@ api.interceptors.request.use((config) => {
 // Auth endpoints
 export const authAPI = {
   login: (email, password) =>
-    api.post('/auth/login/', { email, password }),
+    api.post('/auth/login/', { email, password }).then((response) => response.data),
   register: (email, password, name, passwordConfirm) =>
-    api.post('/auth/register/', { email, password, password_confirm: passwordConfirm || password, name }),
+    api.post('/auth/register/', { email, password, password_confirm: passwordConfirm || password, name }).then((response) => response.data),
   logout: () =>
-    api.post('/auth/logout/'),
+    api.post('/auth/logout/').then((response) => response.data),
   getCurrentUser: () =>
-    api.get('/auth/me/'),
+    api.get('/auth/me/').then((response) => response.data),
+};
+
+export const applicationsAPI = {
+  getAll: () =>
+    api.get('applications/').then((response) => response.data),
+  getById: (id) =>
+    api.get(`applications/${id}/`).then((response) => response.data),
 };
 
 // Internships endpoints

@@ -35,6 +35,16 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         return request.user and request.user.is_authenticated and request.user.user_type == 'admin'
 
 
+class IsAdminOrCompany(permissions.BasePermission):
+    """
+    Allows admin or company users to perform write actions.
+    """
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user and request.user.is_authenticated and request.user.user_type in ('admin', 'company')
+
+
 class IsOwnerOrAdmin(permissions.BasePermission):
     """
     Allows owners or admin users to edit objects.
@@ -42,4 +52,9 @@ class IsOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user and request.user.is_authenticated and request.user.user_type == 'admin':
             return True
-        return obj.requested_by == request.user or obj.submitted_by == request.user or obj.applicant == request.user
+        owner = (
+            getattr(obj, 'requested_by', None) or
+            getattr(obj, 'submitted_by', None) or
+            getattr(obj, 'applicant', None)
+        )
+        return owner == request.user

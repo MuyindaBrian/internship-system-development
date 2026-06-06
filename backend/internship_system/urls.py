@@ -17,22 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
-from rest_framework.routers import DefaultRouter
-from users.views import AuthViewSet
-from internships.views import InternshipViewSet, InternshipApplicationViewSet
-from maintenance.views import MaintenanceRequestViewSet
-from aob.views import AOBRequestViewSet
-
-# Create a single router for all API endpoints
-router = DefaultRouter()
-router.register(r'auth', AuthViewSet, basename='auth')
-router.register(r'internships', InternshipViewSet, basename='internship')
-router.register(r'applications', InternshipApplicationViewSet, basename='application')
-router.register(r'maintenance', MaintenanceRequestViewSet, basename='maintenance')
-router.register(r'aob', AOBRequestViewSet, basename='aob')
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/api/', permanent=False)),
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include('users.urls')),
+    path('api/', include('internships.urls')),
+    path('api/', include('maintenance.urls')),
+    path('api/', include('aob.urls')),
 ]

@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { internshipsAPI, maintenanceAPI } from '../services/api';
+import { applicationsAPI, maintenanceAPI } from '../services/api';
 
 export default function Dashboard({ user }) {
-  const [myInternships, setMyInternships] = useState([]);
+  const [myApplications, setMyApplications] = useState([]);
   const [myMaintenance, setMyMaintenance] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [internshipsRes, maintenanceRes] = await Promise.all([
-          internshipsAPI.getAll(),
+        const [applicationsRes, maintenanceRes] = await Promise.all([
+          applicationsAPI.getAll(),
           maintenanceAPI.getAll(),
         ]);
-        setMyInternships(internshipsRes.results || []);
+        setMyApplications(applicationsRes.results || []);
         setMyMaintenance(maintenanceRes.results || []);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -37,19 +37,23 @@ export default function Dashboard({ user }) {
       <div className="grid md:grid-cols-2 gap-10">
         {/* My Internships */}
         <div className="bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">My Internships</h2>
-          {myInternships.length === 0 ? (
-            <p className="text-gray-500">No internships applied yet</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">My Applications</h2>
+          {myApplications.length === 0 ? (
+            <p className="text-gray-500">No internship applications submitted yet</p>
           ) : (
             <div className="space-y-4">
-              {myInternships.map((internship) => (
+              {myApplications.map((application) => (
                 <div
-                  key={internship.id}
+                  key={application.id}
                   className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition"
                 >
-                  <h3 className="font-semibold text-gray-900">{internship.title}</h3>
-                  <p className="text-gray-600">{internship.description}</p>
-                  <p className="text-sm text-gray-500 mt-2">Status: {internship.status}</p>
+                  <h3 className="font-semibold text-gray-900">
+                    {application.internship?.title || application.title || 'Application'}
+                  </h3>
+                  <p className="text-gray-600">
+                    {application.internship?.description || application.description || 'Application details not available.'}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">Status: {application.status}</p>
                 </div>
               ))}
             </div>

@@ -19,8 +19,8 @@ function App() {
     if (token) {
       setIsAuthenticated(true);
       authAPI.getCurrentUser()
-        .then((response) => {
-          setUser(response.data);
+        .then((userData) => {
+          setUser(userData);
         })
         .catch(() => {
           setIsAuthenticated(false);
@@ -35,7 +35,13 @@ function App() {
     localStorage.setItem('auth_token', token);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await authAPI.logout();
+    } catch (err) {
+      console.warn('Logout request failed:', err);
+    }
+
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem('auth_token');
@@ -52,6 +58,7 @@ function App() {
           <Route path="/dashboard" element={isAuthenticated ? <Dashboard user={user} /> : <Navigate to="/login" />} />
           <Route path="/internships" element={<InternshipList />} />
           <Route path="/maintenance" element={isAuthenticated ? <MaintenanceRequests /> : <Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </BrowserRouter>
